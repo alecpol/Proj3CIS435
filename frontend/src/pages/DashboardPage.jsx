@@ -157,115 +157,133 @@ function DashboardPage() {
     }
   }
 
+  const renderOwner = (pack) => {
+    const ownerEmail =
+      pack.owner?.email || pack.ownerId?.email || pack.ownerEmail || "";
+    if (ownerEmail) return ownerEmail;
+    if (typeof pack.ownerId === "string") return pack.ownerId;
+    return "Unknown";
+  };
+
   return (
-    <div style={{ padding: "1rem 2rem" }}>
-      <header style={{ display: "flex", justifyContent: "space-between" }}>
+    <div className="page-shell">
+      <header className="page-header">
         <div>
-          <h1>My Dashboard</h1>
-          <p>{user ? `Logged in as ${user.email}` : ""}</p>
+          <h1 className="page-title">My Dashboard</h1>
+          <p className="subtitle">
+            {user ? `Logged in as ${user.email}` : "Welcome back!"}
+          </p>
         </div>
-        <button onClick={logout}>Logout</button>
+        <button className="btn secondary" onClick={logout}>
+          Logout
+        </button>
       </header>
 
-      <section style={{ marginTop: "1rem" }}>
-        <button onClick={handleCreatePack}>Create New Flashcard Pack</button>
-      </section>
+      <div className="section-card" style={{ textAlign: "center" }}>
+        <p className="helper-text">
+          Build and explore colorful flashcard packs. Create, practice, and share
+          with friends.
+        </p>
+        <div className="button-row" style={{ marginTop: "0.5rem" }}>
+          <button className="btn" onClick={handleCreatePack}>
+            Create New Flashcard Pack
+          </button>
+        </div>
+      </div>
 
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      {loading && <p>Loading...</p>}
+      {error && <p className="notice">{error}</p>}
+      {loading && <p className="helper-text">Loading...</p>}
 
       {/* Owned Packs */}
-      <section style={{ marginTop: "2rem" }}>
+      <section className="section-card">
         <h2>Owned Packs</h2>
         {ownedPacks.length === 0 ? (
-          <p>No owned packs yet.</p>
+          <p className="helper-text">No owned packs yet.</p>
         ) : (
-          ownedPacks.map((pack) => (
-            <div
-              key={pack._id}
-              style={{
-                border: "1px solid #ccc",
-                padding: "0.5rem",
-                marginBottom: "0.5rem"
-              }}
-            >
-              <h3>{pack.title}</h3>
-              <p>Visibility: {pack.visibility}</p>
-              <p>Owner: You</p>
-              <button onClick={() => navigate(`/editor/${pack._id}`)}>
-                Edit
-              </button>
-              <button onClick={() => navigate(`/deck/${pack._id}`)}>
-                Deck Mode
-              </button>
-              <button onClick={() => handleDeletePack(pack._id)}>
-                Delete
-              </button>
-            </div>
-          ))
+          <div className="grid">
+            {ownedPacks.map((pack) => (
+              <div className="tile" key={pack._id}>
+                <div style={{ display: "flex", justifyContent: "space-between" }}>
+                  <h3 style={{ margin: 0 }}>{pack.title}</h3>
+                  <span className="tag">{pack.visibility}</span>
+                </div>
+                <p className="helper-text" style={{ marginTop: "0.25rem" }}>
+                  Owner: You
+                </p>
+                <div className="button-row" style={{ marginTop: "0.75rem" }}>
+                  <button
+                    className="btn secondary"
+                    onClick={() => navigate(`/editor/${pack._id}`)}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    className="btn secondary"
+                    onClick={() => navigate(`/deck/${pack._id}`)}
+                  >
+                    Deck Mode
+                  </button>
+                  <button
+                    className="btn secondary"
+                    onClick={() => handleDeletePack(pack._id)}
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
         )}
       </section>
 
       {/* Saved Packs */}
-      <section style={{ marginTop: "2rem" }}>
+      <section className="section-card">
         <h2>Saved Packs</h2>
         {savedPacks.length === 0 ? (
-          <p>No saved packs.</p>
+          <p className="helper-text">No saved packs.</p>
         ) : (
-          savedPacks.map((pack) => (
-            <div
-              key={pack._id}
-              style={{
-                border: "1px solid #ccc",
-                padding: "0.5rem",
-                marginBottom: "0.5rem"
-              }}
-            >
-              <h3>{pack.title}</h3>
-              <p>Visibility: {pack.visibility}</p>
-              <p>Owner: {pack.ownerId}</p>
-              <button onClick={() => navigate(`/deck/${pack._id}`)}>
-                Deck Mode
-              </button>
-              <button onClick={() => handleUnsavePack(pack._id)}>
-                Unsave
-              </button>
-            </div>
-          ))
+          <div className="grid">
+            {savedPacks.map((pack) => (
+              <div className="tile" key={pack._id}>
+                <div style={{ display: "flex", justifyContent: "space-between" }}>
+                  <h3 style={{ margin: 0 }}>{pack.title}</h3>
+                  <span className="tag">{pack.visibility}</span>
+                </div>
+                <p className="helper-text" style={{ marginTop: "0.25rem" }}>
+                  Owner: {renderOwner(pack)}
+                </p>
+                <div className="button-row" style={{ marginTop: "0.75rem" }}>
+                  <button
+                    className="btn secondary"
+                    onClick={() => navigate(`/deck/${pack._id}`)}
+                  >
+                    Deck Mode
+                  </button>
+                  <button
+                    className="btn secondary"
+                    onClick={() => handleUnsavePack(pack._id)}
+                  >
+                    Unsave
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
         )}
       </section>
 
       {/* Friends */}
-      <section style={{ marginTop: "2rem" }}>
+      <section className="section-card">
         <h2>Friends</h2>
 
         {/* Live search with dropdown (by email only) */}
-        <div
-          style={{
-            marginBottom: "1rem",
-            position: "relative",
-            maxWidth: "400px"
-          }}
-        >
-          <label
-            style={{
-              display: "block",
-              marginBottom: "0.25rem",
-              fontWeight: "bold"
-            }}
-          >
-            Search and add friends by email:
-          </label>
+        <div style={{ width: "100%", position: "relative", maxWidth: 520 }}>
+          <label className="label">Search and add friends by email:</label>
           <input
             type="email"
             value={friendSearchQuery}
             onChange={handleFriendSearchChange}
             placeholder="Type an email address..."
-            style={{
-              width: "100%",
-              padding: "0.4rem 0.5rem",
-              boxSizing: "border-box"
-            }}
           />
 
           {friendSearchQuery.trim().length > 0 &&
@@ -277,14 +295,14 @@ function DashboardPage() {
                   left: 0,
                   right: 0,
                   zIndex: 10,
-                  backgroundColor: "#fff",
-                  border: "1px solid #ccc",
-                  borderTop: "none",
+                  backgroundColor: "#0b1221",
+                  border: "1px solid rgba(148, 163, 184, 0.4)",
                   listStyle: "none",
                   margin: 0,
                   padding: 0,
                   maxHeight: "200px",
-                  overflowY: "auto"
+                  overflowY: "auto",
+                  borderRadius: "0 0 12px 12px"
                 }}
               >
                 {friendSearchResults.map((u) => (
@@ -292,9 +310,9 @@ function DashboardPage() {
                     key={u._id}
                     onClick={() => handleFriendSuggestionClick(u)}
                     style={{
-                      padding: "0.4rem 0.5rem",
+                      padding: "0.55rem 0.7rem",
                       cursor: "pointer",
-                      borderBottom: "1px solid #eee",
+                      borderBottom: "1px solid rgba(148, 163, 184, 0.3)",
                       display: "flex",
                       justifyContent: "space-between",
                       alignItems: "center",
@@ -306,9 +324,10 @@ function DashboardPage() {
                     </div>
                     <button
                       type="button"
-                      style={{ fontSize: "0.8rem" }}
+                      className="btn secondary"
                       disabled={friendActionLoading}
                       onClick={(e) => handleAddFriendFromSearch(e, u.email)}
+                      style={{ padding: "0.4rem 0.7rem" }}
                     >
                       Add
                     </button>
@@ -318,18 +337,12 @@ function DashboardPage() {
             )}
 
           {friendSearchLoading && (
-            <div style={{ marginTop: "0.25rem", fontSize: "0.8rem" }}>
+            <div className="helper-text" style={{ marginTop: "0.25rem" }}>
               Searching...
             </div>
           )}
           {friendSearchError && (
-            <div
-              style={{
-                marginTop: "0.25rem",
-                fontSize: "0.8rem",
-                color: "red"
-              }}
-            >
+            <div className="notice" style={{ marginTop: "0.25rem" }}>
               {friendSearchError}
             </div>
           )}
@@ -337,32 +350,29 @@ function DashboardPage() {
 
         {/* Friends list */}
         {friends.length === 0 ? (
-          <p>No friends yet.</p>
+          <p className="helper-text">No friends yet.</p>
         ) : (
-          friends.map((friend) => (
-            <div
-              key={friend._id}
-              style={{
-                border: "1px solid #ccc",
-                padding: "0.5rem",
-                marginBottom: "0.5rem"
-              }}
-            >
-              <span
-                style={{ cursor: "pointer", textDecoration: "underline" }}
-                onClick={() => navigate(`/users/${friend._id}`)}
-              >
-                {friend.email}
-              </span>
-              <button
-                onClick={() => handleRemoveFriend(friend._id)}
-                style={{ marginLeft: "0.5rem" }}
-                disabled={friendActionLoading}
-              >
-                Remove
-              </button>
-            </div>
-          ))
+          <div className="grid" style={{ marginTop: "1rem" }}>
+            {friends.map((friend) => (
+              <div className="tile" key={friend._id}>
+                <div
+                  style={{ cursor: "pointer", textDecoration: "underline" }}
+                  onClick={() => navigate(`/users/${friend._id}`)}
+                >
+                  {friend.email}
+                </div>
+                <div className="button-row" style={{ marginTop: "0.75rem" }}>
+                  <button
+                    className="btn secondary"
+                    onClick={() => handleRemoveFriend(friend._id)}
+                    disabled={friendActionLoading}
+                  >
+                    Remove
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
         )}
       </section>
     </div>

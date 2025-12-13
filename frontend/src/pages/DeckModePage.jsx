@@ -65,14 +65,20 @@ function DeckModePage() {
   }
 
   if (!pack && !error) {
-    return <div style={{ padding: '1rem' }}>Loading deck...</div>;
+    return (
+      <div className="page-shell auth-card">
+        <p className="helper-text">Loading deck...</p>
+      </div>
+    );
   }
 
   if (error && !pack) {
     return (
-      <div style={{ padding: '1rem' }}>
-        <p style={{ color: 'red' }}>{error}</p>
-        <button onClick={() => navigate('/dashboard')}>Back to Dashboard</button>
+      <div className="page-shell auth-card" style={{ alignItems: 'flex-start' }}>
+        <p className="notice">{error}</p>
+        <button className="btn secondary" onClick={() => navigate('/dashboard')}>
+          Back to Dashboard
+        </button>
       </div>
     );
   }
@@ -82,40 +88,44 @@ function DeckModePage() {
   const currentCard = hasCards ? pack.cards[currentCardIndex] : null;
 
   return (
-    <div style={{ padding: '1rem' }}>
-      <button onClick={() => navigate('/dashboard')}>Back</button>
-      <h1>Deck Mode – {pack.title}</h1>
+    <div className="page-shell" style={{ alignItems: 'center' }}>
+      <header className="page-header">
+        <div>
+          <h1 className="page-title">Deck Mode – {pack.title}</h1>
+          <p className="subtitle">Flip, shuffle, and focus in a centered workspace.</p>
+        </div>
+        <button className="btn secondary" onClick={() => navigate('/dashboard')}>
+          Back
+        </button>
+      </header>
 
-      {!hasCards && <p>No cards in this pack.</p>}
+      {!hasCards && <p className="helper-text">No cards in this pack.</p>}
 
       {hasCards && currentCard && (
-        <div
-          style={{
-            border: '1px solid #333',
-            padding: '2rem',
-            marginTop: '1rem',
-            maxWidth: 600,
-          }}
-        >
-          <p>
+        <div className="deck-card">
+          <p className="helper-text" style={{ marginBottom: '0.5rem' }}>
             Card {currentCardIndex + 1} of {pack.cards.length}
           </p>
-          <h2>{showAnswer ? 'Answer' : 'Question'}</h2>
-          <p style={{ fontSize: '1.2rem' }}>
+          <h2 style={{ marginTop: 0 }}>{showAnswer ? 'Answer' : 'Question'}</h2>
+          <p style={{ fontSize: '1.2rem', margin: '0.5rem 0' }}>
             {showAnswer ? currentCard.answer : currentCard.question}
           </p>
           {currentCard.hint && !showAnswer && (
-            <p style={{ fontStyle: 'italic' }}>Hint: {currentCard.hint}</p>
+            <p style={{ fontStyle: 'italic', color: '#cbd5e1' }}>
+              Hint: {currentCard.hint}
+            </p>
           )}
 
-          <div style={{ marginTop: '1rem' }}>
-            <button onClick={handleFlip} style={{ marginRight: '0.5rem' }}>
+          <div className="button-row" style={{ marginTop: '1rem' }}>
+            <button className="btn" onClick={handleFlip}>
               Flip
             </button>
-            <button onClick={handleNext} style={{ marginRight: '0.5rem' }}>
+            <button className="btn secondary" onClick={handleNext}>
               Next (send to bottom)
             </button>
-            <button onClick={handleShuffle}>Shuffle</button>
+            <button className="btn secondary" onClick={handleShuffle}>
+              Shuffle
+            </button>
           </div>
         </div>
       )}
