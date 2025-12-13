@@ -317,6 +317,60 @@ function EditorPage() {
               </div>
             ))}
           </div>
+
+          <div style={{ marginTop: "0.75rem" }}>
+            <h3 style={{ margin: 0 }}>Editor</h3>
+            {selectedCard ? (
+              <div className="tile" style={{ padding: "0.75rem" }}>
+                <p style={{ marginTop: 0, marginBottom: "0.5rem" }}>
+                  Editing Card {selectedIndex + 1}
+                </p>
+
+                <label className="label" style={{ display: "block" }}>
+                  Question
+                  <textarea
+                    value={selectedCard.question || ""}
+                    onChange={(e) => handleCardChange("question", e.target.value)}
+                    rows={3}
+                    style={{ width: "100%" }}
+                  />
+                </label>
+
+                <label className="label" style={{ display: "block", marginTop: "0.5rem" }}>
+                  Answer
+                  <textarea
+                    value={selectedCard.answer || ""}
+                    onChange={(e) => handleCardChange("answer", e.target.value)}
+                    rows={3}
+                    style={{ width: "100%" }}
+                  />
+                </label>
+
+                <label className="label" style={{ display: "block", marginTop: "0.5rem" }}>
+                  Hint
+                  <textarea
+                    value={selectedCard.hint || ""}
+                    onChange={(e) => handleCardChange("hint", e.target.value)}
+                    rows={2}
+                    style={{ width: "100%" }}
+                  />
+                </label>
+
+                <div className="button-row" style={{ marginTop: "0.75rem" }}>
+                  <button
+                    className="btn secondary"
+                    onClick={() => handleRemoveCard(selectedIndex)}
+                  >
+                    Remove Card
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <p className="helper-text" style={{ marginTop: "0.35rem" }}>
+                Select a card to edit its question, answer, and hint.
+              </p>
+            )}
+          </div>
         </aside>
 
         {/* Right side (80%) – responsive grid of cards */}
