@@ -28,41 +28,42 @@ function RegisterPage() {
   }
 
   return (
-    <div style={{ maxWidth: 400, margin: '2rem auto' }}>
-      <h1>Register</h1>
-      <form onSubmit={handleSubmit}>
+    <div className="page-shell auth-card">
+      <h1 className="page-title">Register</h1>
+      <p className="helper-text">Create an account to start building flashcards.</p>
+      <form onSubmit={handleSubmit} style={{ width: '100%', textAlign: 'left' }}>
         <div style={{ marginBottom: '1rem' }}>
-          <label>
+          <label className="label">
             Email
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              style={{ display: 'block', width: '100%' }}
             />
           </label>
         </div>
         <div style={{ marginBottom: '1rem' }}>
-          <label>
+          <label className="label">
             Password
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              style={{ display: 'block', width: '100%' }}
             />
           </label>
         </div>
         {error && (
-          <p style={{ color: 'red', marginBottom: '0.5rem' }}>{error}</p>
+          <p className="notice" style={{ marginBottom: '0.5rem' }}>
+            {error}
+          </p>
         )}
-        <button type="submit" disabled={loading}>
+        <button className="btn" type="submit" disabled={loading} style={{ width: '100%' }}>
           {loading ? 'Creating account...' : 'Register'}
         </button>
       </form>
-      <p style={{ marginTop: '1rem' }}>
+      <p className="helper-text" style={{ marginTop: '1rem' }}>
         Already have an account? <Link to="/login">Login</Link>
       </p>
     </div>

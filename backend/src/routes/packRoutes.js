@@ -40,12 +40,26 @@ function createPackRoutes(io) {
   router.get("/saved", async (req, res) => {
     try {
       const user = await User.findById(req.userId)
-        .populate("savedPackIds")
+        .populate({
+          path: "savedPackIds",
+          populate: { path: "ownerId", select: "email" },
+        })
         .lean();
 
       if (!user) return res.status(404).json({ message: "User not found" });
 
-      const packs = user.savedPackIds || [];
+      const packs = (user.savedPackIds || []).map((pack) => {
+        const ownerEmail = pack.ownerId?.email || "";
+        const ownerId = pack.ownerId?._id || pack.ownerId;
+
+        return {
+          ...pack,
+          ownerId,
+          owner: ownerEmail ? { _id: ownerId, email: ownerEmail } : null,
+          ownerEmail,
+        };
+      });
+
       res.json(packs);
     } catch (err) {
       console.error("Get /saved error:", err);

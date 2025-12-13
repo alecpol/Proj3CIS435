@@ -48,61 +48,76 @@ function FriendProfilePage() {
 
   if (loading && !owner) {
     return (
-      <div style={{ padding: "1rem" }}>
-        <button onClick={() => navigate("/dashboard")}>Back</button>
-        <p>Loading profile...</p>
+      <div className="page-shell" style={{ alignItems: "flex-start" }}>
+        <button className="btn secondary" onClick={() => navigate("/dashboard")}>
+          Back
+        </button>
+        <p className="helper-text">Loading profile...</p>
       </div>
     );
   }
 
   if (error && !owner) {
     return (
-      <div style={{ padding: "1rem" }}>
-        <button onClick={() => navigate("/dashboard")}>Back</button>
-        <p style={{ color: "red" }}>{error}</p>
+      <div className="page-shell" style={{ alignItems: "flex-start" }}>
+        <button className="btn secondary" onClick={() => navigate("/dashboard")}>
+          Back
+        </button>
+        <p className="notice">{error}</p>
       </div>
     );
   }
 
   return (
-    <div style={{ padding: "1rem" }}>
-      <button onClick={() => navigate("/dashboard")}>Back</button>
+    <div className="page-shell">
+      <header className="page-header">
+        <div>
+          <h1 className="page-title">Friend Profile</h1>
+          {owner && <p className="subtitle">User: {owner.email}</p>}
+        </div>
+        <button className="btn secondary" onClick={() => navigate("/dashboard")}>
+          Back
+        </button>
+      </header>
 
-      <h1>Friend Profile</h1>
-      {owner && <p>User: {owner.email}</p>}
+      {error && <p className="notice">{error}</p>}
 
-      {error && <p style={{ color: "red" }}>{error}</p>}
-
-      <section style={{ marginTop: "1rem" }}>
-        <h2>Public Flashcard Packs</h2>
+      <section className="section-card">
+        <h2 style={{ marginTop: 0 }}>Public Flashcard Packs</h2>
         {packs.length === 0 ? (
-          <p>No public packs for this user.</p>
+          <p className="helper-text">No public packs for this user.</p>
         ) : (
-          packs.map((pack) => (
-            <div
-              key={pack._id}
-              style={{
-                border: "1px solid #ccc",
-                padding: "0.5rem",
-                marginBottom: "0.5rem"
-              }}
-            >
-              <h3>{pack.title}</h3>
-              <p>{pack.description}</p>
-              <p>Visibility: {pack.visibility}</p>
-              <p>Owner: {owner ? owner.email : pack.ownerId}</p>
-              <button onClick={() => navigate(`/deck/${pack._id}`)}>
-                Deck Mode
-              </button>
-              <button
-                onClick={() => handleSavePack(pack._id)}
-                disabled={savingPackId === pack._id}
-                style={{ marginLeft: "0.5rem" }}
-              >
-                {savingPackId === pack._id ? "Saving..." : "Save Pack"}
-              </button>
-            </div>
-          ))
+          <div className="grid">
+            {packs.map((pack) => (
+              <div className="tile" key={pack._id}>
+                <div style={{ display: "flex", justifyContent: "space-between" }}>
+                  <h3 style={{ margin: 0 }}>{pack.title}</h3>
+                  <span className="tag">{pack.visibility}</span>
+                </div>
+                <p className="helper-text" style={{ marginTop: "0.35rem" }}>
+                  Owner: {owner ? owner.email : pack.ownerId}
+                </p>
+                <p className="helper-text" style={{ marginTop: "0.35rem" }}>
+                  {pack.description}
+                </p>
+                <div className="button-row" style={{ marginTop: "0.75rem" }}>
+                  <button
+                    className="btn secondary"
+                    onClick={() => navigate(`/deck/${pack._id}`)}
+                  >
+                    Deck Mode
+                  </button>
+                  <button
+                    className="btn"
+                    onClick={() => handleSavePack(pack._id)}
+                    disabled={savingPackId === pack._id}
+                  >
+                    {savingPackId === pack._id ? "Saving..." : "Save Pack"}
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
         )}
       </section>
     </div>
